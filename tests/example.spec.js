@@ -1,19 +1,36 @@
-// @ts-check
 import { test, expect } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test.describe("Contact Page", () => {
+  test.beforeEach(async ({page}) =>{
+    await page.goto('https://thriving-duckanoo-3d0681.netlify.app/contact')
+  })
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+  test("Title and nav links", async({page, request}) => {
+  
+    //check title is correct
+    await expect(page).toHaveTitle("Vite + React");
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+        const links = [
+          "https://thriving-duckanoo-3d0681.netlify.app/",
+          "https://thriving-duckanoo-3d0681.netlify.app/contact",
+          "https://thriving-duckanoo-3d0681.netlify.app/about"
+        ];
+      
+        for (const link of links) {
+          const response = await request.get(link);
+          expect(response.status()).toBe(200);
+        }
+})
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+test("Form Validation", async ({page}) => {
+  await page.click('button[type="submit"]');
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-});
+  await expect(page.locator('p.error-message')).toHaveText([
+    'Name is required.',
+    'Email is required.',
+    'Message is required.'
+  ]);
+  
+  })
+
+})
