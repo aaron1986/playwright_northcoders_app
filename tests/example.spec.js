@@ -10,6 +10,7 @@ test.describe("Contact Page", () => {
     //check title is correct
     await expect(page).toHaveTitle("Vite + React");
 
+    //check nav links
         const links = [
           "https://thriving-duckanoo-3d0681.netlify.app/",
           "https://thriving-duckanoo-3d0681.netlify.app/contact",
@@ -33,4 +34,16 @@ test("Form Validation", async ({page}) => {
   
   })
 
+  test("Form submit test", async({page}) => {
+    await page.fill('#fname', 'Aaron Smith');
+    await page.fill('#email', 'aaron@example.com');
+    await page.fill('#message', 'This is a test message.');
+  
+    await page.click('button[type="submit"]');
+    await expect(page.locator('text=Your message has been sent successfully!')).toBeVisible();
+  })
 })
+
+
+
+
